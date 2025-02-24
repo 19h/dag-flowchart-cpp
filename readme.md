@@ -110,23 +110,29 @@ The library supports various layout modes and orientations. For vertical layouts
 ```cpp
 // Instantiate the base layout with your preferred mode.
 std::unique_ptr<GraphLayout> baseLayout =
-    std::make_unique<GraphGridLayoutWithText>(GraphGridLayoutWithText::LayoutType::Medium);
+    std::make_unique<GraphGridLayoutWithText>(
+        GraphGridLayoutWithText::LayoutType::Medium,
+    );
 
 // Optionally switch to horizontal orientation.
 bool useHorizontalLayout = false;  // Set true for horizontal rendering.
-std::unique_ptr<GraphLayout> layout = useHorizontalLayout ?
-    std::make_unique<GraphHorizontalAdapter>(std::move(baseLayout)) :
-    std::move(baseLayout);
+std::unique_ptr<GraphLayout> layout =
+    useHorizontalLayout
+        ? std::make_unique<GraphHorizontalAdapter>(std::move(baseLayout))
+        : std::move(baseLayout);
 ```
 
 Customize layout parameters (spacing, edge routing preferences, etc.) via the `LayoutConfig` structure:
 
 ```cpp
 GraphLayout::LayoutConfig config;
+
 config.blockVerticalSpacing = 40;
 config.blockHorizontalSpacing = 20;
+
 config.edgeVerticalSpacing = 10;
 config.edgeHorizontalSpacing = 10;
+
 layout->setLayoutConfig(config);
 ```
 
@@ -136,7 +142,13 @@ Invoke the `CalculateLayout` method to compute pixel coordinates for nodes and r
 
 ```cpp
 int layoutWidth, layoutHeight;
-layout->CalculateLayout(reinterpret_cast<GraphLayout::Graph&>(graph), /* entry id */ 1, layoutWidth, layoutHeight);
+
+layout->CalculateLayout(
+    reinterpret_cast<GraphLayout::Graph&>(graph),
+    /* entry id */ 1,
+    layoutWidth,
+    layoutHeight,
+);
 ```
 
 After layout computation:
@@ -309,3 +321,32 @@ To summarize, the algorithm works as follows:
  – Adjust node and edge positions and write the final layout to an SVG file.
 
 The entire process is implemented in C++ and uses custom memory pools, segment trees, and a greedy LP–solver to achieve a visually pleasing layout.
+
+
+---
+
+## License
+
+Hark! Behold, another decree of software licensure doth appear before thee!
+
+Verily, thou shalt spend but little time perusing these scrolls, for thy hours are better employed unraveling the mystic riddle of thy once-perfect template metaprogram—now accursed with a staggering forty-seven thousand, two hundred and ninety-three lines of compiler lamentations.
+
+**By rare providence, this code hath been cast into the public commons.**
+
+Wherefore?
+
+Forsooth, life is fleeting, and no good knight hath the leisure for fifty pages of legal decrees nor to tarry awaiting the arbitrations of counsel for the mere use of std::string (as though any soul were ejected for wielding char*).
+
+Copy it, alter it, vend it, or compile it into a maze of bewildering template errors—we care not one jot! Whether thou choosest static linking or dynamic linking, or even that fearsome SFINAE beast that maketh boost::spirit seem as tame as a minstrel’s tune, venture forth and be unrestrained! We vow not to hurl exceptions in its stead (unlike the vexations of thy production code).
+
+Feel at liberty to std::move() this code to any realm thou desirest—yet, in light of thine infamous skirmishes with dangling references, perchance remain true to the art of copying. And nay, enshrouding all within shared_ptr shall not remedy the ills of thy design.
+
+**To ye realms most besotted with copyrights: We hereby renounce all rights to this code, casting it into the public domain with a zeal rivaling that of C++ artisans unraveling fresh incantations to invoke std::function.**
+
+static_assert(true, "Yes, we really mean it"); // Mayst thou discover this gem scarcely within thy build errors!
+
+Lo, the software is bestowed "as is"—a stark and unadorned surprise! No warranties, no pledges of guarantee, not even a modest static_assert attend it.
+
+Should it, by some uncanny alchemy, gain sentience and begin crafting code mightier than thine own, that grievous burden shall be thine alone.
+
+Press onward with thy templates as a battle-hardened artificer well-versed in the trials of code. May thy builds compile without flaw, and thy linker errors be but murmurs lost in the annals of thy log.
