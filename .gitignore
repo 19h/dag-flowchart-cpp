@@ -1,5 +1,5 @@
 .vscode/
-*.svg
 *.png
 *.jpg
 graph
+.DS_Store
