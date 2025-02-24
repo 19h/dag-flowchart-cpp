@@ -2240,7 +2240,8 @@ int main() {
         if (line[0] == '#' || 
             line.find("subgraph") != std::string::npos ||
             line.find("rankdir") != std::string::npos ||
-            line.find("node") != std::string::npos ||
+            ((line.size() >= 4) && line.substr(0, 4) == "node" &&
+            (line.size() == 4 || isspace(line[4]) || line[4]=='[')) ||
             line.find("compound") != std::string::npos ||
             line.find("bgcolor") != std::string::npos ||
             line.find("label=") == 0) {
@@ -2294,8 +2295,33 @@ int main() {
             }
 
             // Extract source and target nodes
+            auto extractNodeName = [](std::string s) -> std::string {
+                std::string trimmed = s;
+                // Trim leading whitespace
+                trimmed.erase(0, trimmed.find_first_not_of(" \t"));
+                // If the node is quoted, extract the content inside quotes.
+                if (!trimmed.empty() && trimmed.front() == '"') {
+                    size_t closingQuote = trimmed.find('"', 1);
+                    if (closingQuote != std::string::npos) {
+                        return trimmed.substr(1, closingQuote - 1);
+                    }
+                }
+                // Fallback for unquoted nodes: remove any attribute part starting with " ["
+                size_t bracketPos = trimmed.find(" [");
+                if (bracketPos != std::string::npos) {
+                    trimmed = trimmed.substr(0, bracketPos);
+                }
+                // Trim trailing whitespace, semicolons, etc.
+                trimmed.erase(trimmed.find_last_not_of(" \t;") + 1);
+                return trimmed;
+            };
+
+            // Then in your edge parsing:
             std::string fromStr = line.substr(0, arrowPos);
             std::string toStr = line.substr(arrowPos + 2);
+
+            fromStr = extractNodeName(fromStr);
+            toStr   = extractNodeName(toStr);
 
             // Clean up node strings
             fromStr.erase(0, fromStr.find_first_not_of(" \t"));

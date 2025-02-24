@@ -322,6 +322,11 @@ To summarize, the algorithm works as follows:
 
 The entire process is implemented in C++ and uses custom memory pools, segment trees, and a greedy LP–solver to achieve a visually pleasing layout.
 
+---
+
+<p align="center">
+  <img src="https://github.com/19h/dag-flowchart-cpp/raw/master/algo.svg" width="700px"/>
+</p>
 
 ---
 
