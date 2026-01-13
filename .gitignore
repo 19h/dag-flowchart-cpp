@@ -3,3 +3,4 @@
 *.jpg
 graph
 .DS_Store
+build/
